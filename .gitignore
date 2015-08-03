@@ -2,3 +2,4 @@
 /phpadmin
 /ueditor_upload
 /Application/Runtime
+/Application/Common/Conf/config.php
