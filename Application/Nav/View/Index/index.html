@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>周博奇的导航</title>
+
+    <!-- Bootstrap -->
+    <link href="__PUBLIC__/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="http://cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+	<style type="text/css">
+		.panel a {
+			margin: 8px 15px;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12" style="text-align:right;margin: 10px 3px;">
+        <if condition="$Think.session.uid gt 0">
+          <{$Think.session.user}>
+          <a href="<{:U('Nav/Index/Logout')}>" class="btn btn-default btn-xs">退出</a>
+        <else />
+  				<a href="javascript:;" id="reg" class="btn btn-default btn-xs">注册</a>
+  				<a href="javascript:;" class="btn btn-default btn-xs" data-toggle="modal" data-target=".bs-example-modal-sm">登陆</a>
+        </if>
+			</div>
+		</div>
+		<foreach name="list" item="v">
+			<div class="panel <if condition='$v[css]'>panel-<{$v.css}><else />panel-default</if>">
+			  	<div class="panel-heading" data-id="<{$v.cid}>"><{$v.name}></div>
+			  	<div class="panel-body">
+			  		<if condition='$v.child'>
+  						<foreach name="v[child]" item="val">
+  							<a href="<{$val.href}>" data-id="<{$val.hid}>" target="_blank" data-toggle="modal" data-target=".addHrefModal"><{$val.name}></a>
+  						</foreach>
+			  		</if>
+            <if condition="$Think.session.uid eq $uid">
+              <a href="javascript:;" class="btn btn-default btn-xs addhref" data-id="<{$v.cid}>"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+            </if>
+			  	</div>
+			</div>
+		</foreach>
+	</div>
+	<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+	    <div class="modal-content">
+	    	<div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+          <h4 class="modal-title" id="mySmallModalLabel">登录<a class="anchorjs-link" href="#mySmallModalLabel"><span class="anchorjs-icon"></span></a></h4>
+        </div>
+        <div class="modal-body">
+      		<form id="signupForm" method="post" action="<{:U('Nav/Index/load')}>">
+	      		<div class="form-group">
+				    <label for="exampleInputEmail1">账号</label>
+				    <input type="text" class="form-control user" name="user" id="exampleInputEmail1" placeholder="用户名">
+				  </div>
+			    <div class="form-group">
+				    <label for="exampleInputPassword1">密码</label>
+				    <input type="password" class="form-control pwd" name="pwd" id="exampleInputPassword1" placeholder="密码">
+			    </div>
+			    <button type="submit" class="btn btn-default">登陆</button>
+	      	</form>
+    		</div>		      	
+	    </div>
+		</div>
+	</div>
+  <div class="modal bs-example-modal-sm addHrefModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm"> 
+      <div class="modal-content"> 
+        <div class="modal-header"> <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button> 
+          <h4 class="modal-title" id="mySmallModalLabel">添加链接
+            <a class="anchorjs-link" href="#mySmallModalLabel"><span class="anchorjs-icon"></span></a></h4> 
+          </div>
+        <div class="modal-body">
+
+        </div> 
+      </div> 
+    </div> 
+  </div>
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="__PUBLIC__/js/jquery.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="__PUBLIC__/js/bootstrap.min.js"></script>
+  <script src="__PUBLIC__/js/jquery.validate.min.js"></script>
+
+  <script>
+    $().ready( function() {
+      $("#signupForm").validate({
+        rules: {
+          user : {
+            required : true,
+            minlength : 4,
+            maxlength : 16,
+          },
+          pwd : {
+            required : true,
+            minlength : 6,
+            maxlength : 18,
+          }
+        },
+        messages: {
+          user : {
+            required : '用户名必填',
+            minlength : '用户名最短不少于4个字节',
+            maxlength : '用户名最长不超过16个字节',
+          },
+          pwd : {
+            required : '密码必填',
+            minlength : '密码最短不少于6个字节',
+            maxlength : '密码最长不超过18个字节',
+          }
+        } 
+      });
+      $('.addHrefModal').on('show.bs.modal', function (event) {
+        var obj = $(this);
+        var cid = obj.attr('data-id');
+        var html = '<form id="addHrefForm" > <div class="form-group"> <label for="exampleInputEmail1">名称</label> <input type="text" class="form-control hname" name="hname"> </div> <div class="form-group"> <label for="exampleInputPassword1">地址</label> <input type="text" class="form-control hhref" name="hhref"> </div> <button type="submit" class="btn btn-default">添加</button> </form> ';
+        $('.addHrefModal .modal-body').append(html);
+      });
+    });
+  </script>
+</body>
+</html> 

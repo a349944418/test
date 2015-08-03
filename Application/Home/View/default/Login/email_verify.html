@@ -1,0 +1,182 @@
+<extend name="Common/base"/>
+<block name="body">
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.form.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/ajaxfileupload.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.Jcrop.js"></script>
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/jquery.Jcrop.css">
+    <div class="container">
+        <div class="row">
+            <div class="webpageLog data_info col-md-8 col-md-offset-2 ">
+                <dl>
+                    <dt>头像：</dt>
+                    <dd>
+                        <div class="headImg clear">
+                            <img src="__ROOT__/Uploads/Userhead/default_head.jpg" class="fl face" id="show_photo">
+                            <div class="fr fileBtn">
+                                <form id='myupload' action='<{:U("Public/upload_photo")}>' method='post' enctype='multipart/form-data'>
+                                    <div id="btn_upload" class="file">
+                                        <span class="btn btn-info " style="width: 92px;height: 24px;line-height: 10px;font-size: 13px;">选择图片</span>
+                                        <input type="file" id="photoToUpload" data-key="photo" name="photo" style="width: 92px;">
+                                    </div>                         
+                                </form>
+                                <div class="file_info">
+                                    <div class="p2" id="show_file">支持jpg,gif,png格式，建议尺寸大于100*100。</div>
+                                </div>
+                            </div>
+                        </div>
+                    </dd>
+                </dl>
+                <form action="<{:U('Login/register2')}>" method="post" >
+                    <input type="hidden" name="headimg" value="" />
+                    <dl>
+                        <dt>性别：</dt>
+                        <dd>
+                            <div class="radio">
+                              <label>
+                                <input type="radio" name="sex" value="2" checked>女
+                              </label>
+                              <label>
+                                <input type="radio" name="sex" value="1" checked>男
+                              </label>
+                            </div>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>出生日期：</dt>
+                        <dd>
+                            <select class="form-control" name="year">
+                                <?php 
+                                    $y = date('Y');
+                                    for($y;$y >= 1920;$y--){
+                                        if($y == 1990){
+                                            $se = 'selected';
+                                        }else{
+                                            $se = '';
+                                        }
+                                        echo '<option value="'.$y.'" '.$se.'>'.$y.'</option>';
+                                    }
+                                ?>
+                            </select>
+                            <select class="form-control" name="month">
+                                <option value="0" >请选择月份</option>
+                                <?php 
+                                    for($i=1 ; $i < 13;$i++){
+                                        echo '<option value="'.$i.'" '.$i.'>'.$i.'</option>';
+                                    }
+                                ?>
+                            </select>
+                            <select class="form-control" name="day">
+                                <option value="0" >请选择日期</option>
+                            </select>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>出生日期：</dt>
+                        <dd class="setcity">
+                            <select class="form-control" name="province">
+                                <option value="0" >请选择省份</option>
+                                <foreach name='province' item='v'>
+                                    <option value="<{$v.no}>"><{$v.areaname}></option>
+                                </foreach>
+                            </select>
+                            <select class="form-control" name="city" style="display:none">
+                                <option value="0" >请选择城市</option>
+                            </select>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>QQ：</dt>
+                        <dd class="sr">
+                            <input type="text" class="form-control" name="qq" value=""/> 
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>微博：</dt>
+                        <dd class="sr">
+                            <input type="text" class="form-control" name="wb" value=""/> 
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>豆瓣：</dt>
+                        <dd class="sr">
+                            <input type="text" class="form-control" name="db" value=""/>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>个性签名：</dt>
+                        <dd class="sr">
+                            <input type="text" class="form-control gxqm" name="gxqm" value="" placeholder="写下您对途经的想法，最多25个字符"/>
+                        </dd>
+                    </dl>
+                    <button type="submit" class="btn btn-info tj" >提交</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+<div class="avatarpop_box" id="avatarpop" style="display: none;">
+    <div class="avatarpop_container">
+        <div class="avatarpop_pic">
+            <img id="jcrop-pic" src="" style="display: block; visibility: visible; width: 300px; height: 300px;">
+        </div>
+        <div class="avatarpop_preview">
+            <div class="preview_txt1">预览：</div>
+            <div class="preview_pane" id="preview-pane">
+                <div class="preview-container">
+                    <img class="jcrop-preview" id="jcrop-preview" src="" style="width: 300px; height: 300px; margin-left: -66px; margin-top: -96px;">
+                </div>
+            </div>
+            <div class="preview_form" id="preview-form">
+                <input type="hidden" class="x" name="x" value="66"> <input type="hidden" class="y" name="y" value="96"> <input type="hidden" class="w" name="w" value="100"> <input type="hidden" class="h" name="h" value="100"> <input type="button" class="btn_save" id="Crop_Image" value="保存"> <input type="button" class="btn_cancel" value="取消">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="avatarpop_mask" style="display: none;"></div>
+    <script type="text/javascript">
+        $(function(){ 
+            var btn = $("#btn_upload span");   
+            $("#photoToUpload").change(function(){
+                $("#myupload").ajaxSubmit({  
+                    dataType:  'json',  
+                    beforeSend: function() {  
+                        btn.html('上传中<img src="__PUBLIC__/img/loading.gif" width="13" height="13">');  
+                    }, 
+                    success: function(data) {
+                        if(data.error == 1){
+                            btn.html("上传失败");  
+                            alert(data.errormsg); 
+                        }else{
+                            jcropPop(data.pic, '<{:U("Public/jcorp")}>');
+                            btn.html("选择图片");
+                        }                           
+                    },  
+                    error:function(data){  
+                    }  
+                });  
+            })
+
+            // 获取每月有几天  
+            $('select[name=month]').change(function(){
+                var m = $(this).val();
+                var y = $('select[name=year]').val();
+                var url = '<{:U("Public/getday")}>';
+                if(m != 0){
+                    getday(m, y, url);
+                }
+            });
+
+            // 获取城市
+            $('select[name=province]').change(function(){
+                var p = $(this).val();
+                var url = '<{:U("Public/getcity")}>';
+                if(p != 0){
+                    getcity(p, url);
+                }else{
+                    $('select[name=city]').css('display', 'none');
+                }
+            })
+
+        })
+    </script>
+</block>

@@ -1,0 +1,82 @@
+<extend name="Common/base"/>
+<block name="body">
+	<div>
+		<div class="container" style="">
+			<div class="row">
+				<div class="col-md-9 user-pub-nav">
+					
+					<ul class="user-index-nav clear">
+						<li class="headimg" style="display:none">
+							<img src="__ROOT__/Uploads/Userhead/<{$Think.cookie.headimg}>" />
+						</li>
+						<li class="pub-item"><a href="<{:U('User/doing')}>">
+							<span class="glyphicon glyphicon-edit pubicon" aria-hidden="true"></span><br/>
+							<span class="glyphicon-class">写心情</span></a>
+						</li>
+						<li class="pub-item"><a href="<{:U('Activity/edit')}>">
+							<span class="glyphicon glyphicon-calendar pubicon" aria-hidden="true"></span><br/>
+							<span class="glyphicon-class">发布活动</span></a>
+						</li>
+						<li class="pub-item"><a href="<{:U('User/travelnote')}>">
+							<span class="glyphicon glyphicon-book pubicon" aria-hidden="true"></span><br/>
+							<span class="glyphicon-class">发布游记</span></a>
+						</li>
+						<li class="pub-item"><a href="">
+							<span class="glyphicon glyphicon-picture pubicon" aria-hidden="true"></span><br/>
+							<span class="glyphicon-class">上传照片</span></a>
+						</li>
+						<li class="pub-item"><a href="<{:U('Blog/editblog')}>">
+							<span class="glyphicon glyphicon-edit pubicon" aria-hidden="true"></span><br/>
+							<span class="glyphicon-class">写博客</span></a>
+						</li>
+					</ul>
+					<div class="clear"></div>
+					<div class="feed">
+						<div class="undergrayline1 feed-title " >
+							<h5>好友动态</h5>
+						</div>
+						<foreach name="feed" item="v">
+              <div class="status-item clear ">
+                <div class="imga">
+                  <img src="__ROOT__/Uploads/Userhead/<{$v.headimg}>" class="headimg" />
+                </div>
+                <div class="cont fr">
+                  <div class="text">
+                    <a href="<{:U('User/index', array('id'=>$v['uid']))}>"><{$v.username}></a> <{$v.feedstatus}> :
+                  </div>
+                  <div class="bd">
+                    <div class="block">
+                      <div class="content">
+                        <div class="title">
+                          <a href="<{:U($v['type'].'/index', array('id'=>$v['oid']))}>" ><{$v.title}></a>
+                        </div>
+                        <p>
+                          <{$v.data}>
+                        </p>
+                      </div>
+                    </div>
+                    <div class="actions">
+  
+                      <span class="created_at" title="<{$v.dateline}>"><a href="http://www.douban.com/people/yuanjin/status/1609617535/"><{:gettime($v['dateline'])}></a></span>
+                      <!-- <a href="http://www.douban.com/people/yuanjin/status/1609617535/" class="btn btn-action-reply" data-action-type="showComments">回应</a>&nbsp;&nbsp;
+
+                      <a href="http://www.douban.com/people/yuanjin/status/1609617535/" class="btn btn-key-like  btn-like" data-action-type="like">赞</a>
+
+                      <span class="count like-count" data-count="5">(<{$v.like}>)</span>&nbsp;&nbsp;
+
+                      <a href="http://www.douban.com/people/yuanjin/status/1609617535/" class="btn btn-key-reshare btn-reshare" data-action-type="reshare">转播</a>    -->                     
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </foreach>
+					</div>
+				</div>
+				<div class="col-md-3">
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+</block>

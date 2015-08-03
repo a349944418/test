@@ -1,0 +1,120 @@
+<extend name="Common/base"/>
+<block name="body">
+	<link href="__PUBLIC__/css/bootstrapValidator.min.css" />
+	<div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">注册用户</h3>
+                    </div>
+                    <div class="panel-body">
+					<form action="<{:U('Login/register')}>" class="form-horizontal" method="post" >
+					<div class="form-group">
+						<label class="col-sm-2 control-label" >电子邮箱</label>
+						<div class="col-sm-5">
+						<input class="form-control" name="email" type="email" value="" placeholder="邮箱"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label" >昵称</label>
+						<div class="col-sm-5">
+						<input class="form-control" name="username" type="username" value="" placeholder="昵称"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label" >密码</label>
+						<div class="col-sm-5">
+						<input class="form-control" name="password" type="password" value="" placeholder="密码"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label" >密码确认</label>
+						<div class="col-sm-5">
+							<input class="form-control" name="password_confirm" type="password" value="" placeholder="确认密码"/>
+						</div>
+					</div>
+					<if condition = "$verify_show">
+					<div class="form-group">
+						<label class="col-sm-2 control-label" >验证码</label>
+						<div class="col-sm-5">
+							<input class="form-control" id="inputVerify" name="verify" size="50" type="text" value="" placeholder="验证码"/>
+							<img class="verifyimg reloadverify" alt="点击切换" src="<{:U('verify')}>">
+						</div>
+					</div>
+					</if>
+					<div class='form-group'>
+						<div class="col-sm-offset-2 col-sm-2">
+							<button type="submit" name="commit" class="btn btn-primary">注册</button>
+						</div>
+						<div class="col-sm-3 tj_load_tip">
+							已注册，请<a href="<{:U('Login/login')}>" >登陆</a>
+						</div>
+					</div>
+					</form>
+                    </div>
+                </div>
+            </div><!-- /.col-md-8 -->
+
+
+        </div><!-- /.row -->
+    </div><!-- /.container -->
+    <script type="text/javascript">
+    	$(function() {
+		    $('.form-horizontal').bootstrapValidator({
+		        feedbackIcons: {
+		            valid: 'glyphicon glyphicon-ok',
+		            invalid: 'glyphicon glyphicon-remove',
+		            validating: 'glyphicon glyphicon-refresh'
+		        },
+		        fields: {
+		            password: {
+		                validators: {
+		                    notEmpty: {
+		                        message: '密码不能为空'
+		                    },
+		                    stringLength: {
+		                        min: 7,
+		                        max: 18,
+		                        message: '密码长度为7~18个长度'
+		                    },
+		                }
+		            },
+		            password_confirm: {
+		                validators: {
+		                    notEmpty: {
+		                        message: '重复密码不能为空'
+		                    },
+		                    identical: {
+		                        field: 'password',
+		                        message: '必须和密码保持一致'
+		                    },
+		                }
+		            },
+		            email: {
+		                validators: {
+		                    notEmpty: {
+		                        message: '邮箱不能为空'
+		                    },
+		                    emailAddress: {
+		                        message: '不合法的邮箱地址'
+		                    }
+		                }
+		            },
+		            username: {
+		            	validators: {
+		                    notEmpty: {
+		                        message: '昵称不能为空'
+		                    },
+		                    stringLength: {
+		                        min: 1,
+		                        max: 15,
+		                        message: '昵称长度为1~15个长度'
+		                    },
+		                }
+		            }
+		        }
+		    });
+		});
+    </script>
+</block>

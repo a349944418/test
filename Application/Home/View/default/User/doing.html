@@ -1,0 +1,31 @@
+<extend name="Common/base"/>
+<block name="body">
+	<div>
+		<div class="container" >
+			<div class="row">
+				<div class="col-md-8 ">
+					<h3 style="margin-bottom: 20px"><if condition="$doid eq 0">发布<else />修改</if>心情</h3>
+					<form method="post" action="<{:U('User/save_doing')}>" class="subdoing">
+						<input type="hidden" name="doid" value="<{$doid}>">
+						<div class="row">
+							<div class="col-xs-10 "><textarea class="form-control message" rows="4" style="resize:none" name="message" placeholder="写下您当前心情，记录曾经的岁月"></textarea></div>
+							<div class="col-xs-2 "><button type="submit" class="btn btn-info" name="sub" value="1">发布</button></div>
+						</div>						
+					</form>
+				</div>
+				<div class="col-md-3">
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$('.subdoing').submit(function(){
+			var con = $('.subdoing .message').val();
+			if(!con){
+				alert('心情不能为空');
+				return false;
+			}
+		})
+	</script>
+</block>

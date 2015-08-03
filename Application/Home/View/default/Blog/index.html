@@ -1,0 +1,191 @@
+<extend name="Common/base"/>
+<block name="body">
+	<div class="container">
+    	<div class="bbs_titbox row">
+			<h1 class="col-md-12"><{$res.title}></h1>
+        
+            <div class="bbs_titbox_info col-md-12 undergrayline2 pb20">    
+            	<div class="infos">
+                	<a href="#" class="btn btn-success btn-xs" > 日记 </a>
+                	<a href="<{:U('User/index', array('id'=>$res[uid]))}>" class="ml10" ><{$res.uname}></a>
+                    <span class="ml15 mr15">|</span>
+                    发表于 <{$res.dateline}>                    
+                    <span class="ml15">|</span>
+                    <span class="views"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> <{$res.hits}></span>
+	                <span class="comment"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span> <{$commentCount}></span>
+	                <span class="like"><span class="glyphicon glyphicon-heart" aria-hidden="true"></span> <{$res.like}></span>
+	                <span class="ml15 mr15">|</span>
+                </div>
+			</div>
+		</div>
+		<div class="row mt20">
+			<!-- 内容区begin -->
+			<div class="col-md-9">
+				<div class="blog-con undergrayline1">
+			    	<{$res.message}>
+			    	<if condition="$Think.cookie.uid eq $res[uid]">
+			    		<div class="editblogline">
+			    			<a href="<{:U('Blog/editblog', array('id'=>$blogid))}>">编辑</a>
+			    		</div>
+			    	</if>
+			    </div>
+			    <!-- 评论 begin -->
+			    <div class="comment">			    	
+			    	<div class="mt20"><h4>评论( <{$commentCount}> )</h4></div>	
+			    	<dl class="jm-comments">
+			    		<foreach name="commentlist" item="v">
+				    		<dd class="comment-post" id="comment_<{$v.bcid}>">
+				    			<div class="post-self">
+				    				<div class="jm-avatar fl">
+				    					<a href="<{:U('User/index', array('id'=>$v[uid]))}>"><img src="__ROOT__/Uploads/Userhead/<{$v.headimg}>" alt="<{$v.username}>"></a>
+				    				</div>
+				    				<div class="comment-body">
+				    					<a href="<{:U('User/index', array('id'=>$v[uid]))}>" class="author-name"><{$v.username}></a>
+				    					<span></span>
+				    					<div class="comment-main">
+				    						<p><{$v.con}></p>
+				    					</div>
+				    					<div class="comment-footer">
+				    						<span class="date"><{$v.dateline}></span>
+				    						<span class="show-arrow fr" style="width:13px;display:block;height:20px"></span>
+				    						<if condition="$Think.cookie.uid eq $res[uid] or $Think.cookie.uid eq $v[uid]">
+					    						<span class="comment fr" showtype="1">
+					    							<a href="javascript:void(0)" class="del" onclick="del_bcomment('<{$v.bcid}>');">删除</a>
+					    						</span>
+					    					</if>
+				    						<span class="comment fr" onclick="showCommentReply(<{$v.bcid}>,0)" id="showtype_<{$v.bcid}>" cid="<{$v.bcid}>" showtype="1">
+				    							<a href="javascript:void(0)">回复</a>
+				    						</span>
+				    						<span class="report">
+				    							<a href="javascript:void(0)" cid="<{$v.bcid}>" id="show_ju_bao_div<{$v.bcid}>" class="show_ju-bao-btn">举报</a>
+				    						</span>
+				    					</div>
+			    					</div>
+		    					</div>
+		    				</dd>
+		    			</foreach>
+	    			</dl>
+	    			<textarea id="blog-comment" class="form-control mt20" rows="4" ></textarea>
+			    	<div class="clear subcomment">
+			    		<span class="fl">您至少需输入5个字</span>
+			    		<a href="javascript:;" class="btn btn-success btn-sm fr">发布</a>
+			    	</div>	    	
+			    </div>
+			    <!-- 评论 end -->
+			</div>
+			<!-- 内容区end -->
+			<div class="col-md-3 ">
+				<div class="mod-usercard row">
+					<div class="content col-xs-9">
+				    	<a href="<{:U('User/index', array('id'=>$res[uid]))}>"><{$res.uname}></a>
+				        <span class="usercard-loc">(<{$authaddress}>)</span>
+				    	<p><{$auth.gxqm}></p>
+				    	<if condition="$Think.cookie.uid neq $res[uid]">
+					    	<div class="ft">
+					    		<button type="button" class="btn btn-xs dofollow <if condition='$followflag neq 1'>btn-success<else />btn-default</if>" data-id="<{$res[uid]}>" event-node="<if condition='$followflag neq 1'>dofollow<else />unfollow</if>">
+					    			<span class="glyphicon <if condition='$followflag neq 1'>glyphicon-plus<else />glyphicon-ok</if>" aria-hidden="true" ></span> <if condition='$followflag neq 1'>关注此人<else />已关注</if>
+					    		</button>  
+
+					    		<{$followCount}>人
+					    	</div>
+					    </if>
+				  	</div>
+				  	<div class="pic col-xs-2">
+				      	<a href="<{:U('User/index', array('id'=>$res[uid]))}>"><img src="__ROOT__/Uploads/Userhead/<{$auth.headimg}>" alt="<{$res.uname}>" width="48" height="48"></a>
+				  	</div>				 	
+				</div>
+			    <div class="mod row mt20">				            
+				    <h2>
+				        <{$res.uname}>的最新日记
+				            &nbsp;·&nbsp;·&nbsp;·&nbsp;·&nbsp;·&nbsp;·
+				            <span class="pl">&nbsp;( <a href="http://www.douban.com/people/sen/notes" target="_self">全部</a> ) </span>
+				    </h2>
+		            <ul class="note-list">
+		            	<foreach name="otherblog" item="v">
+		                	<li>
+		                    	<a title="{$v.title}>" href="<{:U('Blog/index', array('id'=>$v[blogid]))}>"><{$v.title}></a>
+		                    
+		                      <span>&nbsp;(<{$v.like}>人喜欢)</span>
+		                  	</li>
+		                </foreach>
+		            </ul>
+		        </div>
+			    <div class="mod row mt20">				        
+				    <h2>
+				        <{$res.uname}>的日记标签
+				            &nbsp;·&nbsp;·&nbsp;·&nbsp;·&nbsp;·&nbsp;·
+				            <span class="pl" style="display: inline;">&nbsp;( <a href="#" target="_self">全部</a> ) </span>
+				    </h2>
+			        <div class="author-tags visible">
+			            <div class="people_tags">
+				            <span><a href="http://www.douban.com/note/tags/%E8%87%AA%E5%AD%A6%E6%88%90%E6%89%8D?people=sen">自学成才 2</a></span><span><a href="http://www.douban.com/note/tags/%E9%85%92%E5%BA%97?people=sen">酒店 1</a></span><span><a href="http://www.douban.com/note/tags/%E5%8D%8E%E5%B0%94%E9%81%93%E5%A4%AB?people=sen">华尔道夫 1</a></span><span><a href="http://www.douban.com/note/tags/%E8%83%A1%E5%85%B6%E9%B8%A3?people=sen">胡其鸣 1</a></span><span><a href="http://www.douban.com/note/tags/%E5%8D%A2%E7%B1%B3%E5%9F%83?people=sen">卢米埃 1</a></span><a class="more-tags" href="javascript: void 0;">...</a></div>
+				            <div class="people_tags_more"><span><a href="http://www.douban.com/note/tags/%E5%BD%B1%E9%99%A2%E7%AE%A1%E7%90%86?people=sen">影院管理 1</a></span><span><a href="http://www.douban.com/note/tags/%E7%94%B5%E5%BD%B1%E6%8A%95%E8%B5%84?people=sen">电影投资 1</a></span>        
+		                    <span><a href="http://www.douban.com/note/tags/%E5%88%B6%E7%89%87%E7%AE%A1%E7%90%86?people=sen">制片管理 1</a></span>
+		                    <span><a href="http://www.douban.com/note/tags/%E5%84%92%E6%9E%97%E5%A4%96%E5%8F%B2?people=sen">儒林外史 1</a></span>
+		                    <span><a href="http://www.douban.com/note/tags/%E5%84%92%E6%9E%97%E5%A4%96%E5%8F%B2%E4%B8%AD%E7%9A%84%E4%B8%96%E6%80%81%E7%82%8E%E5%87%89?people=sen">儒林外史中的世态炎凉 1</a></span>
+		                    <span><a href="http://www.douban.com/note/tags/how-to?people=sen">how-to 1</a></span>
+		            	</div>
+		       		</div>
+		    	</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(function(){
+			//关注
+			$('.dofollow').click(function(){
+				var fid = $(this).attr('data-id');
+				var flag = $(this).attr('event-node') == 'dofollow' ? 1 : 2;
+				var url = flag == 1 ? "<{:U('Follow/dofollow')}>" : "<{:U('Follow/unfollow')}>";
+				follow_toggle(url, fid, flag);
+			})
+
+			var uid = '<{$Think.cookie.uid}>';
+			//评论输入
+			$('#blog-comment').focus(function(){
+				if(!uid){
+					alert('请登录后再来操作');
+					$('#blog-comment').blur();
+				}
+			});
+			$('#blog-comment').keyup(function(){
+				var con = $('#blog-comment').val();
+				var num = 1000-con.length;
+				$('.subcomment .fl').html('还可输入<font style="color:blue">'+num+'</font>字');
+			});
+			//提交评论
+			$('.subcomment a').click(function(){
+				var con = $('#blog-comment').val();
+				var num = con.length;
+				if(num < 5){
+					alert('评论不能少于5个字');
+				}else{
+					var id = '<{$Think.get.id}>';
+					var auth = '<{$res.uid}>';
+					$.post('<{:U("Blog/addComment")}>', {id: id, con: con, auth: auth}, function(data){
+						if(data.error != 1){
+							var html = '<dd class="comment-post" id="comment_'+data.bcid+'"><div class="post-self"><div class="jm-avatar fl"><a href="'+data.url+'"><img src="__ROOT__/Uploads/Userhead/<{$Think.cookie.headimg}>" alt=""></a></div><div class="comment-body"><a href="'+data.url+'" class="author-name"><{$Think.cookie.uname}></a><span></span><div class="comment-main"><p>'+con+'</p></div><div class="comment-footer"><span class="date">一秒前</span><span class="show-arrow fr" style="width:13px;display:block;height:20px"></span><span class="comment fr" showtype="1"><a href="javascript:void(0)" class="del" onclick="del_bcomment('+data.bcid+');">删除</a></span><span class="comment fr" onclick="showCommentReply('+data.bcid+',0)" id="showtype_'+data.bcid+'" cid="'+data.bcid+'" showtype="1"><a href="javascript:void(0)">回复</a></span><span class="report"><a href="javascript:void(0)" cid="'+data.bcid+'" id="show_ju_bao_div'+data.bcid+'" class="show_ju-bao-btn">举报</a></span></div></div></div></dd>';
+			    			$('.jm-comments').append(html);
+			    			$('#blog-comment').val('');
+			    			$('#blog-comment').blur();
+			    			$('.subcomment .fl').html('您至少需输入5个字');
+						}else{
+							alert(data.errormsg);
+						}
+					}, 'json');
+
+				}
+			})
+		})
+
+		function del_bcomment(cid){
+			if(!cid){
+				tcc('操作有误');
+			}
+			var url = "<{:U('Blog/cdel')}>";
+			if(confirm('删除后不能恢复，确认删除')){
+				del_comment(url, cid, '#comment_'+cid);
+			}				
+		}
+	</script>
+</block>

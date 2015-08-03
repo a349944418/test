@@ -1,0 +1,128 @@
+<extend name="Common/base"/>
+<block name="body">
+    <link href="__PUBLIC__/css/bootstrapValidator.min.css" />
+    <js file="__JS__/checkForm.js" />
+	<div class="container">
+		<div class="row">
+			<div class="col-md-9">
+				<div class="buy-order">
+                    <form class="form-horizontal">
+    					<div class="item-title form-panel"><h3><{$activity.title}></h3></div>
+    					<div class="order-member-info form-panel">
+    						<h3>出行人信息</h3>			
+    						<div style="background: #f9f9f9" class="order-member-list clear">
+    							<foreach name="member" item="v">
+    								<div><input type="checkbox" data="<{$v.name}>-<{$v.idcard}>-<{$v.phone}>" value="<{$v.umid}>" onclick="addCheckPeople(this)"/> &nbsp;<{$v.name}></div>
+    							</foreach>
+    							<div class="add-people-div"><a href="javascript:;" class="add-people-info">新增用户</a></div>
+    						</div>
+                            <div class="order-member-list-info">                
+        						<div class="form-field tour-info order-member1" style="z-index:100" >
+                                    <div class="tour-head">
+                                        <span class="tour-index">第1位出行驴友</span>
+                                        <a href="javascript:void(0);" class="clear-tour-form">删除</a>
+                                    </div>
+                                    <div class="tour-list-input">
+                                        <div class="form-group">
+                                            <label for="qt_name_1" class="col-sm-2 control-label">姓名：</label>
+                                            <div class="col-sm-6">
+                                                <input class="form-control" type="text" name="person_name_1" id="qt_name_1" readonly>
+                                            </div>
+                                            <div class="col-sm-4">
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="qt_phone_1" class="col-sm-2 control-label">手机：</label>
+                                            <div class="col-sm-6">
+                                                <input class="form-control" type="text" name="person_phone_1" id="qt_phone_1" readonly>
+                                            </div>
+                                            <div class="col-sm-4">
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="" class="col-sm-2 control-label">证件：</label>
+                                            <div class="col-sm-2" style="padding-right:0px">
+                                                <select class="form-control" name="qt_credentials_type_1" disabled>
+                                                  <option value="1">身份证</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-4" style="padding-left: 5px;">
+                                                <input class="form-control" type="text" name="credentials_no_1" id="qt_no_1" readonly>
+                                            </div>
+                                            <div class="col-sm-4">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+    					</div>
+                        <div class="form-panel order-extra">
+                            <div class="form-group">
+                                <label for="" class="col-sm-2 control-label">备注：</label>
+                                <div class="col-sm-8">
+                                    <textarea class="form-control" rows="3" name="postscript"></textarea>
+                                </div>
+                            </div>
+                            <div class="checkbox col-sm-10 col-sm-offset-2">
+                              <label>
+                                <input type="checkbox" value="">
+                                我已阅读并同意了<a href="view-buyxy" target="_blank" rel="nofollow">预订须知</a>
+                              </label>
+                            </div>
+                        </div>
+                        <div class="form-action clear">
+                            <div class="prev-wrap">
+                                <a class="prev-btn" href="javascript:void(0);">上一步</a>
+                            </div>
+                            <div class="go-wrap">
+                                <input class="go-btn" type="submit" value="提交订单" name="button" id="button">
+                            </div>
+                        </div>
+                    </form>
+
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="order-info">
+					<div class="item-title undergrayline1"><h4>订单信息</h4></div>
+					<div class="proc-info">
+                        <ul>
+                            <li>
+                                <span class="icon-o icon-st-o">出发</span>
+                                <span class="t"><{:date('Y-m-d', $activity['starttime'])}>&nbsp;&nbsp;<{:getweek($activity['starttime'])}></span>
+                            </li>
+                            <li>
+                                <span class="icon-o icon-rt-o">结束</span>
+                                <span class="t"><{:date('Y-m-d', $activity['endtime'])}>&nbsp;&nbsp;<{:getweek($activity['endtime'])}></span>
+                            </li>
+                            <li>
+                                <span class="icon-o icon-pc-o">单价</span>
+                                <span class="t"><{$activity.pay}>元/人</span>
+                            </li>                           
+                        </ul>
+                    </div>
+				</div>
+			</div>
+		</div>
+	</div>
+    <script type="text/javascript">
+        $(function(){
+            $('.add-people-info').click(function(){
+                $.post("<{:U('Activity/addmem')}>", '', function(data){
+                    if(!data.error){
+                        $('body').append(data.con);
+                        $('#myModal').modal({backdrop:'static'});
+                    }else{
+                        tcc(data.errormsg);
+                    }
+                }, 'json');             
+                    
+            })
+
+            
+        })
+    </script>
+</block>

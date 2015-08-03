@@ -1,0 +1,41 @@
+<extend name="Common/base"/>
+<block name="body">
+    <script type="text/javascript">
+        function sendAgain(url){
+            $.post(url, {}, function(data){
+                if(data.error == 1){
+                    alert(data.errormsg);
+                }else{
+                    alert('发送成功');
+                }
+            }, 'json');
+        }
+    </script>
+    <div class="container">
+        <div class="row">
+            <div class="webpageLog col-md-6 col-md-offset-3 ">
+                <h1>用户注册</h1>
+                <div class="slogan"><span>途经，带你走过梦中的旅途</span></div>
+                <div class="mailTest">
+                    <p>
+                        <i></i>邮件已发送到您的邮箱
+                        <a href="<{$emailurl}>" target="_blank"><{$email}></a><br>
+                        请点击邮件中的链接完成验证
+                    </p>
+                </div>
+                <div class="mail mail2">
+                    <a href="<{$emailurl}>" target="_blank" class="btn btn-info btn-lg btn-block">立即前往邮箱验证</a>
+                </div>
+                
+                <div class="mialList">
+                	<h4>还没有收到验证邮件？</h4>
+                	<ul>
+                    	<li>1、邮件地址写错了？那就再 <a href="<{:U('Login/reg')}>">注册</a> 一次！</li>
+                        <li>2、在垃圾邮件、广告邮件中找找看？</li>
+                        <li>3、网速慢？稍等几分钟，若仍旧没收到，我们 <a href="javascript:sendAgain('<{:U('Set/email')}>');">再发一封</a> ！</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
